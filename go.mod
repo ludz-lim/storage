@@ -1,4 +1,4 @@
-module github.com/chartmuseum/storage
+module github.com/ludz-lim/storage
 
 go 1.14
 
