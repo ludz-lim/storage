@@ -41,12 +41,14 @@ type AmazonS3Backend struct {
 
 // NewAmazonS3Backend creates a new instance of AmazonS3Backend
 func NewAmazonS3Backend(bucket string, prefix string, region string, endpoint string, sse string) *AmazonS3Backend {
-	service := s3.New(session.New(), &aws.Config{
-		Region:           aws.String(region),
-		Endpoint:         aws.String(endpoint),
-		DisableSSL:       aws.Bool(strings.HasPrefix(endpoint, "http://")),
-		S3ForcePathStyle: aws.Bool(endpoint != ""),
-	})
+        awsConfig = aws.NewConfig()
+        awsConfig.WithRegion(aws.String(region))
+        if endpoint != "" && endpoint != nil {
+                awsConfig.WithEndpoint(endpoint)
+        }
+        awsConfig.WithDisableSSL(aws.Bool(strings.HasPrefix(endpoint, "http://")))
+        awsConfig.WithS3ForcePathStyle(aws.Bool(endpoint != ""))
+        service := s3.New(session.NewSession(awsConfig))
 	b := &AmazonS3Backend{
 		Bucket:     bucket,
 		Client:     service,
